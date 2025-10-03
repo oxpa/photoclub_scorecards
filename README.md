@@ -18,7 +18,7 @@ The script renames every uploaded photo and links it into the appropriate direct
 1. In the menu on the left go to “triggers”, create a trigger for “testRenameFiles” to run on form submission.
 1. Go to settings of the script, enable appscript.json in code editor
 1. Paste the json to allow drive requests (needed to move files around)
-1. Go to renameAndCopy.js, make sure baseDirId is correct: this is a directory where ‘yyyy-mm’ directories are created. Open the directory in Drive, the ID is the last part of the URL.
+1. Go to `renameAndCopy.js`, make sure baseDirId is correct: this is a directory where ‘yyyy-mm’ directories are created. Open the directory in Drive, the ID is the last part of the URL.
 
 ## Before the competition night: 
 1. make sure there are no problems with the per submit script. Check that all the data looks consistent. Check all B&W images are B&W and colour are colour.
@@ -51,3 +51,37 @@ The script renames every uploaded photo and links it into the appropriate direct
 1. Look through formulas, make sure none are mangled
 
 
+# Photographer of the year script
+The scripts processes form submissions (renames and moves files), build scorecards and final scoring for all photos.
+
+## Form
+The form needs email, CCG number, (Image Name, Image upload)x6. Email is added to the form by enabling "collecting emails" via user input.
+
+The order of fields is important, the number of rounds should be 6 or otherwise you have to edit code.
+
+## Spreadsheet setup
+Spreadsheet should have one sheet for the form, and one sheet for setup. The setup sheet has the first row dedicated to a header and then should have Name-Grade-CCG Number in columns A, B and C. And Column F should have judges names.
+
+## Code setup
+Code needs access to drive and spreadsheets. So the manifest from this repo should be applied to `poty.js` project too.
+
+`renameFiles` can be scheduled to be called on every form submit but can also be run once when it's time to prepare scorecards.
+
+## How it all works
+### In preparation for competition
+Setup the form, make sure answers are collected properly
+
+### Before the night
+1. Just in case - copy the form, uploads and the spreadsheet into a separate directory as a backup
+1. Run `renameFiles`, if it wasn't scheduled for per-submit execution. The function renames them in-place. The upload folder can be shared with judges for review.
+1. Run `prepareScoreCard`. It will create per-round scorecards as well as per-judge overall scorecards. Per-round cards are helpful for arranging printed copies. Per-judge cards are used by judges to actually score photos.
+1. Prepare per-round or overall powerpoint presentation using the "insert album" trick.
+
+### On the night
+1. bring printed per-round scorecards to help arrange photos properly
+2. bring laptops for each judge. Just in case - also bring per-judge copy of the scorecard.
+3. wait through the scoring process
+4. make a backup of the sheet, just in case
+5. look through the scores. Make sure there are no typos, stray symbols, etc.
+6. run `calculateScores`, pray for no typos:), look through the resulting score table. Make sure there are no gaps, scores over the possible range and so on.
+7. Announce the winner.
